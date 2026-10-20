@@ -1,0 +1,18 @@
+#cloud-config
+
+# Atualiza a lista de pacotes antes das instalações
+
+
+# Cria um usuário administrador
+
+
+# Instala os softwares declarativamente
+
+
+# Cria uma página personalizada
+
+
+# Executa comandos após as etapas de configuração
+
+
+# Mensagem final registrada nos logs
