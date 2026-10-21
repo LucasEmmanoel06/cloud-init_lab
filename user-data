@@ -1,18 +1,57 @@
 #cloud-config
 
 # Atualiza a lista de pacotes antes das instalações
-
+package_update: true
 
 # Cria um usuário administrador
-
+users:
+  - name: meu-usuario
+    gecos: Usuario Administrador DevOps
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    lock_passwd: true
+    ssh_authorized_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMk/6yz5rmoLc0u2g43JfcZzknYx0YcB8fO+DoWFozYL atividadecloudinit"
 
 # Instala os softwares declarativamente
-
+packages:
+  - docker.io
+  - nginx
 
 # Cria uma página personalizada
-
+write_files:
+  - path: /var/www/html/index.html
+    owner: root:root
+    permissions: "0644"
+    content: |
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Laboratório Cloud-Init</title>
+        <style>
+          body { font-family: Arial, sans-serif; background: #0f172a; color: #e2e8f0;
+                 display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+          .card { background: #1e293b; padding: 2rem 3rem; border-radius: 12px; text-align: center; }
+          h1 { color: #38bdf8; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h1>Cloud-Init funcionando!</h1>
+          <p>Servidor <strong>servidor-devops</strong> provisionado automaticamente.</p>
+          <p>Nginx e Docker instalados via user-data.</p>
+        </div>
+      </body>
+      </html>
 
 # Executa comandos após as etapas de configuração
-
+runcmd:
+  - [systemctl, enable, --now, nginx]
+  - [systemctl, enable, --now, docker]
+  - [usermod, -aG, docker, meu-usuario]
 
 # Mensagem final registrada nos logs
+final_message: "Cloud-Init concluído: usuário meu-usuario, Docker e Nginx configurados após $UPTIME segundos."
